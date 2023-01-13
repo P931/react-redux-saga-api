@@ -1,17 +1,34 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+//................................ react-redux.................................
+import { Provider } from "react-redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+
+// ..............................sagas.................
+import createSagaMiddleware from "redux-saga";
+import mySaga from "./sagas";
+import value from "./Reducer/Dispatch";
+
+const rootReducer = combineReducers({ value });
+
+const sagaMiddleware = createSagaMiddleware();
+
+const Globalstore = createStore(
+  rootReducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  applyMiddleware(sagaMiddleware)
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+sagaMiddleware.run(mySaga);
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <Provider store={Globalstore}>
+      <App />
+    </Provider>
+  </React.StrictMode>
+);
