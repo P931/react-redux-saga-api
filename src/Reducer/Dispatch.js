@@ -1,18 +1,18 @@
-import { GET_USER_SUCCESS, GET_USER_ERROR } from "../action/index.js";
+import { GET_TODOS_SUCCESS, GET_TODOS_ERROR } from "../action/index.js";
 
-const initial = {
-  data: {},
-  // user: []   .......success..........
-  error: null,
+const details = {
+  user: [],
+  error: "",
 };
 
-// user: []
-const value = (state = { initial }, action) => {
+// { user: [] }
+
+const value = (state = details, action) => {
   switch (action.type) {
-    case GET_USER_SUCCESS:
+    case GET_TODOS_SUCCESS:
       return { ...state, user: action.user };
 
-    case GET_USER_ERROR:
+    case GET_TODOS_ERROR:
       return {
         ...state,
         error: action.error,

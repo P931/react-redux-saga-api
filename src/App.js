@@ -1,91 +1,90 @@
 import "./App.css";
-import Card from "@mui/material/Card";
-import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getapifetch } from "./action";
+import TextField from "@mui/material/TextField";
+import { Paper } from "@mui/material";
 
 function App() {
-  const [userid, setUserid] = useState([]);
-  const [Storedata, setStoredata] = useState([]);
+  const [userid, setUserid] = useState();
 
   const handleInput = (e) => {
     setUserid(e.target.value);
   };
 
-  const handleAdd = () => {
-    setStoredata((preval) => {
-      return { ...preval, userid };
-    });
-    console.log(userid);
-    setUserid("");
-  };
-
   const dispatch = useDispatch();
-  const todos = useSelector((state) => state.value.user);
 
-  useEffect(() => {
-    return () => {};
-  }, []);
+  // user todos.................................
+  const todos = useSelector((state) => state.value.user);
+  console.log("todos value is :- ", todos.todos);
+
+  // error .......................................
+  const error = useSelector((state) => state.value.user);
+  console.log("your error message is :- ", error.message);
 
   return (
     <>
-      <div className="main">
-        <Card className="container">
-          <div className="hed">
-            <Card className="header">TODO</Card>
-          </div>
+      {/* <h1 className="err">{` error is = ${error.message}`}</h1> */}
 
+      <div className="main">
+        {/* <Paper className="container"> */}
+        <div className="hed">
+          <div className="header">TODO</div>
+        </div>
+
+        <Paper className="form">
           <div className="input">
-            <Input
+            <TextField
+              variant="outlined"
               className="int"
               type="number"
               onChange={handleInput}
               value={userid}
               placeholder="Enter User ID"
-            ></Input>
+            ></TextField>
           </div>
-
           <div className="cbtn">
             <Button
-              variant="outlined"
+              // variant="outlined"
+              variant="contained"
               className="btn"
               onClick={() => dispatch(getapifetch(userid))}
             >
               ADD
             </Button>
           </div>
+        </Paper>
 
-          {/* <div className="store">
-            {todos &&
-              todos.map((user) => (
-                <>
-                  <div className="card">
-                    <p>{user.id}</p>
-                  </div>
-                </>
-              ))}
-          </div> */}
+        <pap className="store">
+          {todos.todos ? (
+            todos.todos &&
+            todos.todos.map((post) => {
+              const { id, todo, completed, userId } = post;
 
-          <div className="store">
-            {todos &&
-              todos.map((user) => {
-                const { id, todo, completed, userID } = user;
+              /* console.log("id is :- " + id); */
 
-                return (
-                  <>
-                    <div className="card">
-                      <p>{id}</p>
-                      <p>{todo}</p>
-                      <p>{completed}</p>
-                      <p>{userID}</p>
-                    </div>
-                  </>
-                );
-              })}
-          </div>
-        </Card>
+              return (
+                <div className="data" key={id}>
+                  <p>ID : {id}</p>
+                  <p>TODO : {todo} </p>
+                  <p>{completed}</p>
+                  <p> UserID : {userId} </p>
+                </div>
+              );
+            })
+          ) : (
+            <>
+              {error !== "" && (
+                <h1 className="err">{` error is = ${error.message}`}</h1>
+              )}
+            </>
+          )}
+        </pap>
+
+        {/* <Card> this is Toolbar</Card> */}
+
+        {/* </Paper> */}
       </div>
     </>
   );
